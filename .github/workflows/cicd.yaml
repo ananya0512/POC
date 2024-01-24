@@ -40,9 +40,9 @@ jobs:
             path: staging
 
       - name: Print files in staging
-          run: ls -R staging
+        run: ls -R staging
       - name: Copy artifact to repository
-          run: |
+        run: |
             cp -R staging/. $GITHUB_WORKSPACE
             git config --local user.email "actions@github.com"
             git config --local user.name "GitHub Actions"

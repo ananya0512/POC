@@ -28,13 +28,13 @@ jobs:
       - name: Build project with Maven
         run: mvn -B package --file pom.xml
 
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: my-artifact
-          path: ./target
-      - name: Download Artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: /home/runner/work/POC/POC/target/jb-hello-world-maven-0.2.0-shaded.jar
-          path: ./downloaded-artifact
+      #- name: Upload Artifacts
+      #  uses: actions/upload-artifact@v2
+      #  with:
+      #    name: my-artifact
+      #    path: ./target
+      #- name: Download Artifact
+      #  uses: actions/download-artifact@v2
+      #  with:
+      #    name: /home/runner/work/POC/POC/target/jb-hello-world-maven-0.2.0-shaded.jar
+      #    path: ./downloaded-artifact

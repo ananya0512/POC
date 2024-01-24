@@ -39,6 +39,23 @@ jobs:
             name: Package
             path: staging
 
+      - name: Print files in staging
+          run: ls -R staging
+      - name: Copy artifact to repository
+          run: |
+            cp -R staging/. $GITHUB_WORKSPACE
+            git config --local user.email "actions@github.com"
+            git config --local user.name "GitHub Actions"
+            git add .
+            git commit -m "Add Package artifact"
+            git push
+
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: Package
+          path: config/checkstyle
+
       #- name: Upload Artifacts
       #  uses: actions/upload-artifact@v2
       #  with:

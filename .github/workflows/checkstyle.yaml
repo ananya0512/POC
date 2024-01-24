@@ -1,10 +1,12 @@
-name: Checkstyle
+name: CI/CD
 
 on:
   pull_request:
+    branches:
+      - main
   push:
     branches:
-      - main  # Adjust the branch name as needed
+      - main
 
 jobs:
   checkstyle:
@@ -22,3 +24,6 @@ jobs:
 
       - name: Run Checkstyle
         run: mvn checkstyle:check
+
+      - name: Build project with Maven
+        run: mvn -B package --file pom.xml

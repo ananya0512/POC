@@ -15,7 +15,7 @@
     <!--Add more checks from google style guide:-->
     <!--https://github.com/checkstyle/checkstyle/blob/master/src/main/resources/google_checks.xml-->
     <module name="TreeWalker">
-        <property name="tabWidth" value="2"/>
+        <property name="tabWidth" value="4"/>
         <module name="PackageName">
             <property name="format" value="^[a-z]+(\.[a-z][a-z0-9]*)*$"/>
         </module>

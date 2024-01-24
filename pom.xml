@@ -61,7 +61,7 @@
                     <failOnViolation>true</failOnViolation>
                     <linkXRef>false</linkXRef>
                     <format>xml</format>
-                    <outputDirectory>target/checkstyle-reports/</outputDirectory>
+                    <outputDirectory>config</outputDirectory>
                 </configuration>
                 <executions>
                     <execution>

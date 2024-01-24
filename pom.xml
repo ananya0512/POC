@@ -60,6 +60,8 @@
                     <failsOnError>true</failsOnError>
                     <failOnViolation>true</failOnViolation>
                     <linkXRef>false</linkXRef>
+                    <format>xml</format>
+                    <outputDirectory>target/checkstyle-reports/</outputDirectory>
                 </configuration>
                 <executions>
                     <execution>

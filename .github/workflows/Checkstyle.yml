@@ -24,12 +24,21 @@ jobs:
 
     - name: Run Checkstyle
       run: |
-        MODIFIED_FILES=$(git diff --name-only HEAD^ HEAD)
-        for FILE in $MODIFIED_FILES; do
-          if [[ "$FILE" == *.java ]]; then
-            checkstyle -c checkstyle.xml -f xml -o checkstyle_report.xml "$FILE"
-          fi
-        done
+      if git rev-parse HEAD^ >/dev/null 2>&1; then
+        REVISION=HEAD^
+        else
+        REVISION=HEAD~1
+      fi
+    
+      # Get modified files between the current commit and the parent commit
+      MODIFIED_FILES=$(git diff --name-only $REVISION HEAD)
+    
+      # Run Checkstyle on modified Java files
+      for FILE in $MODIFIED_FILES; do
+        if [[ "$FILE" == *.java ]]; then
+          checkstyle -c checkstyle.xml -f xml -o checkstyle_report.xml "$FILE"
+        fi
+      done
 
     - name: List files
       run: |

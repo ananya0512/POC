@@ -46,10 +46,10 @@ jobs:
          git fetch origin
 
           # Get the latest commit hash
-         latest_commit=$(git log --format="%H" -n 1 origin)
+         latest_commit=$(git log --format="%H" -n 1)
 
           # Get the parent commit hash
-         parent_commit=$(git log --format="%H" -n 1 origin^)
+         parent_commit=$(git log --format="%H" -n 1 HEAD^)
 
           # Get the modified files between the latest commit and the parent commit
          modified_files=$(git diff --name-only $parent_commit $latest_commit)

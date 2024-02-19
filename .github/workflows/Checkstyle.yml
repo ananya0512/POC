@@ -30,10 +30,10 @@ jobs:
          REVISION=HEAD~1
        fi
     
-       # Get modified files between the current commit and the parent commit
+       #Get modified files between the current commit and the parent commit
        MODIFIED_FILES=$(git diff --name-only $REVISION HEAD)
     
-       # Run Checkstyle on modified Java files
+       #Run Checkstyle on modified Java files
        for FILE in $MODIFIED_FILES; do
          if [[ "$FILE" == *.java ]]; then
            checkstyle -c checkstyle.xml -f xml -o checkstyle_report.xml "$FILE"

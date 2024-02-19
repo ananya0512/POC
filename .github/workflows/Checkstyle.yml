@@ -25,22 +25,38 @@ jobs:
     - name: Run Checkstyle
       run: |
        # Get the latest commit hash
-       latest_commit=$(git rev-parse HEAD)
+       #latest_commit=$(git rev-parse HEAD)
 
        # Get the parent commit hash
-       parent_commit=$(git rev-parse HEAD^)
+       #parent_commit=$(git rev-parse HEAD^)
 
        # Get the modified files between the latest commit and the parent commit
-       modified_files=$(git diff --name-only $parent_commit $latest_commit)
+       #modified_files=$(git diff --name-only $parent_commit $latest_commit)
 
        # Loop through the modified files
-        for file in $modified_files; do
+        #for file in $modified_files; do
           # Check if the file is a Java file
-          if [[ "$file" == *.java ]]; then
+         # if [[ "$file" == *.java ]]; then
             # Run Checkstyle on the modified Java file
-            checkstyle -c checkstyle.xml -f xml -o checkstyle_report.xml "$file"
-          fi
-        done
+          #  checkstyle -c checkstyle.xml -f xml -o checkstyle_report.xml "$file"
+          #fi
+        #done
+
+        # Fetch latest changes from remote repository
+         git fetch origin
+
+          # Get the latest commit hash
+         latest_commit=$(git log --format="%H" -n 1 origin)
+
+          # Get the parent commit hash
+         parent_commit=$(git log --format="%H" -n 1 origin^)
+
+          # Get the modified files between the latest commit and the parent commit
+         modified_files=$(git diff --name-only $parent_commit $latest_commit)
+
+          # Print the modified files
+         echo "Modified files in the latest commit:"
+         echo "$modified_files"
 
     - name: List files
       run: |

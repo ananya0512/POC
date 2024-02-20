@@ -22,6 +22,9 @@ jobs:
         java-version: '17'
         distribution: 'adopt'
 
+    - name: Install Checkstyle
+      run: sudo apt-get install checkstyle    
+
     - name: Run Checkstyle
       run: |
        # Get the latest commit hash

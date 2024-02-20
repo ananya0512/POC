@@ -42,21 +42,8 @@ jobs:
           #fi
         #done
 
-        # Fetch latest changes from remote repository
-         git fetch origin
-
-          # Get the latest commit hash
-         latest_commit=$(git log --format="%H" -n 1)
-
-          # Get the parent commit hash
-         parent_commit=$(git log --format="%H" -n 1 HEAD^)
-
-          # Get the modified files between the latest commit and the parent commit
-         modified_files=$(git diff --name-only $parent_commit $latest_commit)
-
-          # Print the modified files
-         echo "Modified files in the latest commit:"
-         echo "$modified_files"
+      git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | grep '\.java$' | xargs checkstyle -c config/checkstyle/checkstyle.xml -f xml -o checkstyle_report.xml
+      working-directory: ${{ github.workspace }}
 
     - name: List files
       run: |

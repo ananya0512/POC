@@ -42,7 +42,7 @@ jobs:
           #fi
         #done
 
-      git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | grep '\.java$' | xargs checkstyle -c config/checkstyle/checkstyle.xml -f xml -o checkstyle_report.xml
+       git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | grep '\.java$' | xargs checkstyle -c config/checkstyle/checkstyle.xml -f xml -o checkstyle_report.xml
       working-directory: ${{ github.workspace }}
 
     - name: List files

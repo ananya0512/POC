@@ -52,4 +52,4 @@ jobs:
     - name: List files
       run: |
         ls
-        cat checkstyle_report.xml   
+        cat $HOME/checkstyle_report.xml

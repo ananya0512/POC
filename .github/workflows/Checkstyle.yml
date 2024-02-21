@@ -40,7 +40,7 @@ jobs:
 
     - name: Run Checkstyle
       run: |
-        while IFS= read -r modifiedfile; do.
+        while IFS= read -r modifiedfile; do
           if [[ "$modifiedfile" == *.java ]]; then
             checkstyle -c checkstyle.xml -f xml -o checkstyle_report.xml "$modifiedfile"
           fi

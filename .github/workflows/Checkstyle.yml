@@ -33,22 +33,18 @@ jobs:
       uses: trilom/file-changes-action@v1.2.3
       with:
         output: ' '
-        fileOutput: ' '
+        fileOutput: 'modified_files.txt '
     - name: test
       run: |
-        cat $HOME/files.txt      
+        cat $HOME/modified_files.txt      
 
-    #- name: Run Checkstyle
-    #  run: |
-
-       #latest_commit=$(git rev-parse HEAD)
-       #parent_commit=$(git rev-parse HEAD^)
-       #modified_files=$(git diff --name-only $parent_commit $latest_commit)
-       # for file in $modified_files; do
-       #   if [[ "$file" == *.java ]]; then
-       #     checkstyle -c checkstyle.xml -f xml -o checkstyle_report.xml "$file"
-       #   fi
-       # done
+    - name: Run Checkstyle
+      run: |
+        for $HOME/modified_files.txt | while read -r file; do
+          if [[ "$file" == *.java ]]; then
+            checkstyle -c checkstyle.xml -f xml -o checkstyle_report.xml "$file"
+          fi
+        done
 
        #git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | grep '\.java$' | xargs checkstyle -c config/checkstyle/checkstyle.xml -f xml -o checkstyle_report.xml
       #working-directory: ${{ github.workspace }}

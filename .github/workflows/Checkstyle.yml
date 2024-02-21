@@ -33,10 +33,10 @@ jobs:
       uses: trilom/file-changes-action@v1.2.3
       with:
         output: ' '
-        fileOutput: 'modified_files.txt '
+        fileOutput: 'modified_files.txt'
     - name: test
       run: |
-        cat $HOME/modified_files.txt      
+        cat $HOME/modified_files.txt
 
     - name: Run Checkstyle
       run: |

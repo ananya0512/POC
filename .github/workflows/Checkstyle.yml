@@ -42,7 +42,7 @@ jobs:
       run: |
         while IFS= read -r modifiedfile; do
           if [[ "$modifiedfile" == *.java ]]; then
-            checkstyle -c checkstyle.xml -f xml -o checkstyle_report.xml "$modifiedfile"
+            checkstyle -c checkstyle.xml -f xml -o $HOME/checkstyle_report.xml "$modifiedfile"
           fi
         done < "$HOME/files.txt"
 

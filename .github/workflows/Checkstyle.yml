@@ -8,6 +8,10 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+  pull-requests: read
+
 jobs:
   checkstyle:
     runs-on: ubuntu-latest
@@ -22,33 +26,34 @@ jobs:
         java-version: '17'
         distribution: 'adopt'
 
-    - name: Install Checkstyle
-      run: sudo apt-get install checkstyle    
+    # - name: Install Checkstyle
+    #   run: sudo apt-get install checkstyle    
+    
+    - id: file_changes
+        uses: trilom/file-changes-action@v1.2.3
+        with:
+          output: ' '
+          fileOutput: ' '
+    - name: test
+        run: |
+          cat $HOME/files.txt      
 
     - name: Run Checkstyle
       run: |
-       # Get the latest commit hash
+
        #latest_commit=$(git rev-parse HEAD)
-
-       # Get the parent commit hash
        #parent_commit=$(git rev-parse HEAD^)
-
-       # Get the modified files between the latest commit and the parent commit
        #modified_files=$(git diff --name-only $parent_commit $latest_commit)
+       # for file in $modified_files; do
+       #   if [[ "$file" == *.java ]]; then
+       #     checkstyle -c checkstyle.xml -f xml -o checkstyle_report.xml "$file"
+       #   fi
+       # done
 
-       # Loop through the modified files
-        #for file in $modified_files; do
-          # Check if the file is a Java file
-         # if [[ "$file" == *.java ]]; then
-            # Run Checkstyle on the modified Java file
-          #  checkstyle -c checkstyle.xml -f xml -o checkstyle_report.xml "$file"
-          #fi
-        #done
+       #git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | grep '\.java$' | xargs checkstyle -c config/checkstyle/checkstyle.xml -f xml -o checkstyle_report.xml
+      #working-directory: ${{ github.workspace }}
 
-       git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | grep '\.java$' | xargs checkstyle -c config/checkstyle/checkstyle.xml -f xml -o checkstyle_report.xml
-      working-directory: ${{ github.workspace }}
-
-    - name: List files
-      run: |
-        ls
-        cat checkstyle_report.xml   
+    # - name: List files
+    #   run: |
+    #     ls
+    #     cat checkstyle_report.xml   

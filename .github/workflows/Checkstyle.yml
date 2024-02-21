@@ -33,16 +33,16 @@ jobs:
       uses: trilom/file-changes-action@v1.2.3
       with:
         output: ' '
-        fileOutput: 'modified_files.txt'
+        fileOutput: ' '
     - name: test
       run: |
-        cat $HOME/modified_files.txt
+        cat $HOME/files.txt
 
     - name: Run Checkstyle
       run: |
-        for $HOME/modified_files.txt | while read -r file; do
-          if [[ "$file" == *.java ]]; then
-            checkstyle -c checkstyle.xml -f xml -o checkstyle_report.xml "$file"
+        for $HOME/files.txt | while read -r modifiedfile; do
+          if [[ "$modifiedfile" == *.java ]]; then
+            checkstyle -c checkstyle.xml -f xml -o checkstyle_report.xml "$modifiedfile"
           fi
         done
 

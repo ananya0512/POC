@@ -49,7 +49,7 @@ jobs:
        #git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | grep '\.java$' | xargs checkstyle -c config/checkstyle/checkstyle.xml -f xml -o checkstyle_report.xml
       #working-directory: ${{ github.workspace }}
 
-    # - name: List files
-    #   run: |
-    #     ls
-    #     cat checkstyle_report.xml   
+    - name: List files
+      run: |
+        ls
+        cat checkstyle_report.xml   

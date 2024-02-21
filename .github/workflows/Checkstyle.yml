@@ -46,13 +46,6 @@ jobs:
           fi
         done < "$HOME/files.txt"
 
-        
-        # for $HOME/files.txt | while read -r modifiedfile; do
-        #   if [[ "$modifiedfile" == *.java ]]; then
-        #     checkstyle -c checkstyle.xml -f xml -o checkstyle_report.xml "$modifiedfile"
-        #   fi
-        # done
-
        #git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | grep '\.java$' | xargs checkstyle -c config/checkstyle/checkstyle.xml -f xml -o checkstyle_report.xml
       #working-directory: ${{ github.workspace }}
 

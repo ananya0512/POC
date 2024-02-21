@@ -30,16 +30,16 @@ jobs:
     #   run: sudo apt-get install checkstyle    
     
     - id: file_changes
-        uses: trilom/file-changes-action@v1.2.3
-        with:
-          output: ' '
-          fileOutput: ' '
+      uses: trilom/file-changes-action@v1.2.3
+      with:
+        output: ' '
+        fileOutput: ' '
     - name: test
-        run: |
-          cat $HOME/files.txt      
-
-    - name: Run Checkstyle
       run: |
+        cat $HOME/files.txt      
+
+    #- name: Run Checkstyle
+    #  run: |
 
        #latest_commit=$(git rev-parse HEAD)
        #parent_commit=$(git rev-parse HEAD^)

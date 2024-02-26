@@ -43,7 +43,7 @@ jobs:
         while IFS= read -r modifiedfile; do
           if [[ "$modifiedfile" == *.java ]]; then
             #checkstyle -c checkstyle.xml -f xml -o $HOME/checkstyle_report.xml "$modifiedfile"
-            mvn -B verify checkstyle:checkstyle -Dcheckstyle.config.location=path/to/checkstyle.xml -Dcheckstyle.consoleOutput=false -Dcheckstyle.outputFile=checkstyle-results.xml "$modifiedfile"
+            mvn -B verify checkstyle:checkstyle -Dcheckstyle.config.location=config/checkstyle/checkstyle.xml -Dcheckstyle.consoleOutput=false -Dcheckstyle.outputFile=$HOME/checkstyle-results.xml "$modifiedfile"
 
           fi
         done < "$HOME/files.txt"
@@ -51,4 +51,4 @@ jobs:
     - name: List files
       run: |
         ls
-        cat $HOME/checkstyle_report.xml
+        cat $HOME/checkstyle-results.xml

@@ -42,12 +42,11 @@ jobs:
       run: |
         while IFS= read -r modifiedfile; do
           if [[ "$modifiedfile" == *.java ]]; then
-            checkstyle -c checkstyle.xml -f xml -o $HOME/checkstyle_report.xml "$modifiedfile"
+            #checkstyle -c checkstyle.xml -f xml -o $HOME/checkstyle_report.xml "$modifiedfile"
+            mvn -B verify checkstyle:checkstyle -Dcheckstyle.config.location=path/to/checkstyle.xml -Dcheckstyle.consoleOutput=false -Dcheckstyle.outputFile=checkstyle-results.xml "$modifiedfile"
+
           fi
         done < "$HOME/files.txt"
-
-       #git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | grep '\.java$' | xargs checkstyle -c config/checkstyle/checkstyle.xml -f xml -o checkstyle_report.xml
-      #working-directory: ${{ github.workspace }}
 
     - name: List files
       run: |

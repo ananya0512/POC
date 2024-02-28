@@ -47,4 +47,4 @@ jobs:
 
           fi
         done < "$HOME/files.txt"
-        mvn site
+        mvn -B site

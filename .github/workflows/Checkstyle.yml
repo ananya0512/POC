@@ -47,9 +47,4 @@ jobs:
 
           fi
         done < "$HOME/files.txt"
-        mvn -B site
-
-    - name: List files
-      run: |
-        ls
-        cat $HOME/checkstyle-results.xml
+        mvn site

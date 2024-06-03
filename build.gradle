@@ -40,7 +40,7 @@ tasks.withType(JavaCompile).configureEach {
     }
 }
 
-def releaseVersion = "TM_24.4.0.0"
+def releaseVersion = "TM_24.4.0.4"
 def nodeVersion = "16.15.0"
 def instanceJarDir = "${rootProject.projectDir}/build/libs/Jars"
 def angularDir = "${rootProject.projectDir}/client"

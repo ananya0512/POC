@@ -3,10 +3,10 @@ name: Checkstyle
 on:
   pull_request:
     branches:
-      - main
+      - TM-40149
   push:
     branches:
-      - main
+      - TM-40149
 
 permissions:
   contents: read
@@ -15,7 +15,7 @@ permissions:
 jobs:
   checkstyle:
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -26,9 +26,10 @@ jobs:
         java-version: '17'
         distribution: 'adopt'
 
-    # - name: Install Checkstyle
-    #   run: sudo apt-get install checkstyle    
-    
+    - name: Install Checkstyle
+      run: |
+        sudo apt-get update && sudo apt-get install checkstyle
+
     - id: file_changes
       uses: trilom/file-changes-action@v1.2.3
       with:
@@ -38,13 +39,80 @@ jobs:
       run: |
         cat $HOME/files.txt
 
-    - name: Run Checkstyle
+    - name: Extract Changed Lines
       run: |
-        while IFS= read -r modifiedfile; do
-          if [[ "$modifiedfile" == *.java ]]; then
-            checkstyle -c checkstyle.xml -f xml -o $HOME/checkstyle_report.xml "$modifiedfile"
-            mvn -B verify checkstyle:check -Dcheckstyle.config.location=config/checkstyle/checkstyle.xml -Dcheckstyle.consoleOutput=false -Dcheckstyle.outputFile=$HOME/checkstyle-results.xml "$modifiedfile"
+         CHANGED_FILES=$(cat $HOME/files.txt | tr '\n' ' ')
+         echo "Changed files: $CHANGED_FILES"
+         git log
+         if [[ $(git log --oneline | wc -l) -gt 1 ]]; then
+            BASE_SHA=$(git rev-parse HEAD^)  # Get the SHA of the previous commit on the current branch
+         else
+            BASE_SHA=$(git rev-parse HEAD)   # Set BASE_SHA to the current commit if there's no previous commit
+         fi
+         HEAD_SHA=$(git rev-parse HEAD)
+         mkdir -p $HOME/changed_lines
+         > modified_files.txt
+         echo "BASE_SHA: $BASE_SHA"
+         echo "HEAD_SHA: $HEAD_SHA"
+         echo "File: $file"
+         for file in $CHANGED_FILES; do
+           if [[ $file == *.java ]]; then
+             echo "Checking changed lines in: $file"
+             git diff $BASE_SHA $HEAD_SHA $file | grep -E '^\+[^+]' | sed 's/^\+//' > "$HOME/changed_lines/$(basename $file)"
+             if [ -s "$HOME/changed_lines/$(basename $file)" ]; then
+                echo "$file:$HOME/changed_lines/$(basename $file)" >> modified_files.txt
+              fi
+              cat modified_files.txt
+           fi
+         done
 
-          fi
-        done < "$HOME/files.txt"
-        mvn -B site
+    - name: Run Checkstyle on Changed Lines
+      run: |
+        if [ -s modified_files.txt ]; then
+          ALL_VIOLATIONS=""
+          while IFS= read -r line; do
+            FILE=$(echo $line | cut -d: -f1)
+            TEMP_FILE=$(echo $line | cut -d: -f2)
+            echo "Running Checkstyle on changed lines in: $FILE"
+            
+            # Prepare a temporary Java file with header and changed lines
+            HEADER=$(head -n 1 $FILE)
+            echo $HEADER > temp_$FILE
+            cat $TEMP_FILE >> temp_$FILE
+
+            # Run Checkstyle on the temporary file
+            output=$(mvn -f RTM checkstyle:check -Dcheckstyle.config.location=/home/runner/work/rflx-tm-creator-server/rflx-tm-creator-server/RTM/checkstyle.xml -Dcheckstyle.includes="**/temp_$FILE" 2>&1 | grep "You have" | tail -n 1)
+            filename=$(basename "$FILE")
+            ALL_VIOLATIONS="${ALL_VIOLATIONS}${filename}: ${output}\n"
+
+            # Clean up the temporary file
+            rm temp_$FILE
+          done < modified_files.txt
+
+          echo -e "ALL_VIOLATIONS<<EOF\n${ALL_VIOLATIONS}\nEOF" >> $GITHUB_ENV
+        else
+          echo "No modified Java files to check."
+        fi
+
+    # - name: Use Checkstyle Violations
+    #   run: |
+    #     #echo "Checkstyle Violations: ${{ env.checkstyle-violations }}"
+    #     echo "Checkstyle Violations:"
+    #     echo -e "${{ env.ALL_VIOLATIONS }}"
+
+    # - name: Send Notification to Teams
+    #   run: |
+    #     TEAMS_WEBHOOK_URL="https://zebra.webhook.office.com/webhookb2/d9dc7093-5176-4cb3-87ee-554b8d3cecc5@4d3d260a-9c40-4306-8dac-0d64717039ec/IncomingWebhook/4b1021398cf5455994a93e4007d3008f/42a344da-43c6-455b-9513-66ef50f71102"
+    #     BUILD_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+    #     if [ -n "${{ env.ALL_VIOLATIONS }}" ]; then
+    #       # If there are Checkstyle violations
+    #       curl -H 'Content-Type: application/json' -d '{
+    #          "text": "Checkstyle Violations :\n\n'"${{ env.ALL_VIOLATIONS }}\n\n[View Build Logs](${BUILD_URL})"'"
+    #       }' $TEAMS_WEBHOOK_URL
+    #     else
+    #       curl -H 'Content-Type: application/json' -d '{
+    #          "text": "Skipping Checkstyle: Not a Java file\n\n[View Build Logs]('${BUILD_URL}')"
+    #       }' $TEAMS_WEBHOOK_URL
+    #     fi
+
+

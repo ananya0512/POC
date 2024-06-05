@@ -3,10 +3,10 @@ name: Checkstyle
 on:
   pull_request:
     branches:
-      - TM-40149
+      - main
   push:
     branches:
-      - TM-40149
+      - main
 
 permissions:
   contents: read
